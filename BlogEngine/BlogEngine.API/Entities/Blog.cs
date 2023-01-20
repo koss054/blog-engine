@@ -6,7 +6,7 @@
     {
         public Blog()
         {
-            this.Comments = new List<Comment>();
+            Comments = new List<Comment>();
         }
 
         /// <summary>
