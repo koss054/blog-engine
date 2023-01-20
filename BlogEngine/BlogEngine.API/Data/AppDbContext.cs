@@ -6,9 +6,17 @@
 
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions options) 
+        public AppDbContext(DbContextOptions options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<UserBlog>()
+                .HasKey(ub => new { ub.UserId, ub.BlogId });
+
+            base.OnModelCreating(builder);
         }
 
         public DbSet<Blog> Blogs { get; set; } = null!;
