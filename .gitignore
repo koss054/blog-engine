@@ -1,3 +1,5 @@
-BlogEngine/bin/
-BlogEngine/obj/
+BlogEngine/BlogEngine.API/bin/
+BlogEngine/BlogEngine.API/obj/
 BlogEngine/.vs/
+
+.vscode
