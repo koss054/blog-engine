@@ -17,9 +17,14 @@
         }
 
         [HttpGet]
-        public ActionResult<string> Test()
+        public ActionResult<List<string>> Test()
         {
-            return "testtttttt successful g";
+            var list = new List<string>();
+            
+            list.Add("lol bruh");
+            list.Add("bruh lol");
+
+            return list;
         } 
     }
 }
