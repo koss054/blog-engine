@@ -31,5 +31,15 @@
         [Required]
         [StringLength(32)]
         public string Password { get; set; } = null!;
+
+        /// <summary>
+        /// Pass hash.
+        /// </summary>
+        public byte[] PasswordHash { get; set; } = null!;
+
+        /// <summary>
+        /// Pass salt.
+        /// </summary>
+        public byte[] PasswordSalt { get; set; } = null!;
     }
 }
