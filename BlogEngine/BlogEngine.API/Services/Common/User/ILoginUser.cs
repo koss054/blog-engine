@@ -2,10 +2,11 @@ namespace BlogEngine.API.Services.Common.User
 {
     using Microsoft.AspNetCore.Mvc;
     
+    using Entities;
     using Models.User;
 
     public interface ILoginUser
     {
-        Task<IActionResult> LoginUser(LoginUser loginUser);        
+        Task<User?> LoginUser(LoginUser loginUser);        
     }
 }

@@ -21,9 +21,9 @@ namespace BlogEngine.API.Services
             _context = context;
         }
 
-        public async Task<bool> RegisterUser(RegisterUser registerUser)
+        public async Task<User?> RegisterUser(RegisterUser registerUser)
         {
-            if (await GetUser(registerUser) != null) return false;
+            if (await GetUser(registerUser) != null) return null;
 
             using var hmac = new HMACSHA512();
 
@@ -38,14 +38,13 @@ namespace BlogEngine.API.Services
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
-            return true;
+            return user;
         }
 
-        public async Task<IActionResult> LoginUser(LoginUser loginUser) {
+        public async Task<User?> LoginUser(LoginUser loginUser) {
             var user = await GetUser(loginUser);
 
-            if (user is null)
-                return new ObjectResult("User doesn't exist") { StatusCode = 401 };
+            if (user is null) return null;
 
             if (loginUser.UserName.Contains("@")) 
                 user.UserName = loginUser.Email;
@@ -54,11 +53,10 @@ namespace BlogEngine.API.Services
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
 
             for (int i = 0; i < computedHash.Length; i++) {
-                if (computedHash[i] != user.PasswordHash[i])
-                    return new ObjectResult("Invalid password") { StatusCode = 401 };
+                if (computedHash[i] != user.PasswordHash[i]) return null;
             }
 
-            return new ObjectResult("Success") { StatusCode = 200 };
+            return user;
         }
 
         private async Task<User?> GetUser(IUserDto user) {

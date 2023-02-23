@@ -18,17 +18,21 @@ namespace BlogEngine.API.Controllers
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterUser(RegisterUser registerUser) {
-            var isUserRegistered = await _service.RegisterUser(registerUser);
+            var user = await _service.RegisterUser(registerUser);
 
-            if (!isUserRegistered) return BadRequest(registerUser);
+            if (user == null) return BadRequest(registerUser);
 
-            return Ok(registerUser);
+            return Ok(user);
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> LoginUser(LoginUser loginUser) {
-            return await _service.LoginUser(loginUser);
+            var user = await _service.LoginUser(loginUser);
+
+            if (user == null) return Unauthorized(loginUser);
+
+            return Ok(user);
         }
     }
 }
