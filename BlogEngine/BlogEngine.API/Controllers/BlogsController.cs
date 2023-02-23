@@ -4,10 +4,8 @@
 
     using Data;
     using Entities;
-
-    [ApiController]
-    [Route("api/[controller]")]
-    public class BlogsController : ControllerBase
+    
+    public class BlogsController : BaseApiController
     {
         private readonly AppDbContext _context;
 

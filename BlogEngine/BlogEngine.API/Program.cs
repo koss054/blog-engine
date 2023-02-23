@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using BlogEngine.API.Data;
+using BlogEngine.API.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddCors();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
