@@ -20,9 +20,9 @@ namespace BlogEngine.API.Controllers
         public async Task<IActionResult> RegisterUser(RegisterUser registerUser) {
             var isUserRegistered = await _service.RegisterUser(registerUser);
 
-            if (!isUserRegistered) return BadRequest();
+            if (!isUserRegistered) return BadRequest(registerUser);
 
-            return NotFound();
+            return Ok(registerUser);
         }
     }
 }
