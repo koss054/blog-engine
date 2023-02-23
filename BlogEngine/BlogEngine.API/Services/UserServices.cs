@@ -21,47 +21,53 @@ namespace BlogEngine.API.Services
             _context = context;
         }
 
-        public async Task<User?> RegisterUser(RegisterUser registerUser)
+        public async Task<User> RegisterUser(RegisterUser registerUser)
         {
-            if (await GetUser(registerUser) != null) return null;
+            var user = new User();
 
-            using var hmac = new HMACSHA512();
-
-            var user = new User 
+            if (await UserExists(registerUser.UserName, registerUser.Email) == false)
             {
-                UserName = registerUser.UserName,
-                Email = registerUser.Email,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerUser.Password)),
-                PasswordSalt = hmac.Key
-            };
+                using var hmac = new HMACSHA512();
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+                user.UserName = registerUser.UserName;
+                user.Email = registerUser.Email;
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerUser.Password));
+                user.PasswordSalt = hmac.Key;
+
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
 
             return user;
         }
 
-        public async Task<User?> LoginUser(LoginUser loginUser) {
-            var user = await GetUser(loginUser);
+        public async Task<User?> LoginUser(LoginUser loginUser)
+        {
+            if (await UserExists(loginUser.UserName) == false) return null;
 
-            if (user is null) return null;
-
-            if (loginUser.UserName.Contains("@")) 
-                user.UserName = loginUser.Email;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginUser.UserName);
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
 
-            for (int i = 0; i < computedHash.Length; i++) {
+            for (int i = 0; i < computedHash.Length; i++)
+            {
                 if (computedHash[i] != user.PasswordHash[i]) return null;
             }
 
             return user;
         }
 
-        private async Task<User?> GetUser(IUserDto user) {
+        private async Task<bool> UserExists(string userName)
+        {
             return await _context.Users
-                .SingleOrDefaultAsync(u => u.UserName == user.UserName || u.Email == user.Email);
+                .AnyAsync(u => u.UserName == userName);
+        }
+
+        private async Task<bool> UserExists(string userName, string email)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.UserName == userName || u.Email == email);
         }
     }
 }

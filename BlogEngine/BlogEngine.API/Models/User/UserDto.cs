@@ -1,9 +1,9 @@
 namespace BlogEngine.API.Models.User
 {
-    public class LoginUser
+    public class UserDto : IUserDto
     {
         public string UserName { get; set; } = null!;
 
-        public string Password { get; set; } = null!;
+        public string Token { get; set; } = null!;
     }
 }

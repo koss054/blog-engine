@@ -4,6 +4,6 @@ namespace BlogEngine.API.Models.User
     {
         string UserName { get; }
 
-        string Email { get; }
+        string Token { get; }
     }
 }

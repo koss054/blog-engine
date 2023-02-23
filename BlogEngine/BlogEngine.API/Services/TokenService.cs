@@ -2,13 +2,12 @@ namespace BlogEngine.API.Services
 {
     using System.Text;
     using System.Security.Claims;
+    using System.IdentityModel.Tokens.Jwt;
 
     using Microsoft.IdentityModel.Tokens;
 
     using BlogEngine.API.Common;
     using BlogEngine.API.Entities;
-    using Microsoft.IdentityModel.JsonWebTokens;
-    using System.IdentityModel.Tokens.Jwt;
 
     public class TokenService : ITokenService
     {
