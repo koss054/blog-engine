@@ -6,6 +6,7 @@ namespace BlogEngine.API.Controllers
     using Entities;
     using BlogEngine.API.Services.Common.User;
     using BlogEngine.API.Common;
+    using Microsoft.AspNetCore.Authorization;
 
     public class UsersController : BaseApiController
     {
@@ -18,6 +19,7 @@ namespace BlogEngine.API.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterUser(RegisterUser registerUser)
@@ -35,6 +37,7 @@ namespace BlogEngine.API.Controllers
             return Ok(userDto);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> LoginUser(LoginUser loginUser)
