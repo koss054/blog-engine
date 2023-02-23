@@ -24,5 +24,11 @@ namespace BlogEngine.API.Controllers
 
             return Ok(registerUser);
         }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> LoginUser(LoginUser loginUser) {
+            return await _service.LoginUser(loginUser);
+        }
     }
 }

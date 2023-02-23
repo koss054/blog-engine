@@ -1,16 +1,16 @@
 namespace BlogEngine.API.Services
 {
+    using System.Text;
     using System.Threading.Tasks;
+    using System.Security.Cryptography;
 
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    using Common;
+    using Data;
     using Entities;
     using Models.User;
-    using System.Security.Cryptography;
-    using System.Text;
-    using BlogEngine.API.Data;
-    using BlogEngine.API.Services.Common.User;
+    using Services.Common.User;
 
     public class UserServices : IUserService
     {
@@ -23,7 +23,7 @@ namespace BlogEngine.API.Services
 
         public async Task<bool> RegisterUser(RegisterUser registerUser)
         {
-            if (await UserExists(registerUser)) return false;
+            if (await GetUser(registerUser) != null) return false;
 
             using var hmac = new HMACSHA512();
 
@@ -31,7 +31,6 @@ namespace BlogEngine.API.Services
             {
                 UserName = registerUser.UserName,
                 Email = registerUser.Email,
-                Password = registerUser.Password,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerUser.Password)),
                 PasswordSalt = hmac.Key
             };
@@ -42,8 +41,29 @@ namespace BlogEngine.API.Services
             return true;
         }
 
-        private async Task<bool> UserExists(IUserDto user) {
-            return await _context.Users.AnyAsync(u => u.UserName == user.UserName);
+        public async Task<IActionResult> LoginUser(LoginUser loginUser) {
+            var user = await GetUser(loginUser);
+
+            if (user is null)
+                return new ObjectResult("User doesn't exist") { StatusCode = 401 };
+
+            if (loginUser.UserName.Contains("@")) 
+                user.UserName = loginUser.Email;
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
+
+            for (int i = 0; i < computedHash.Length; i++) {
+                if (computedHash[i] != user.PasswordHash[i])
+                    return new ObjectResult("Invalid password") { StatusCode = 401 };
+            }
+
+            return new ObjectResult("Success") { StatusCode = 200 };
+        }
+
+        private async Task<User?> GetUser(IUserDto user) {
+            return await _context.Users
+                .SingleOrDefaultAsync(u => u.UserName == user.UserName || u.Email == user.Email);
         }
     }
 }

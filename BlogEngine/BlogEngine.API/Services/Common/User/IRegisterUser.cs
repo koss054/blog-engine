@@ -1,6 +1,5 @@
-namespace BlogEngine.API.Services.Common
+namespace BlogEngine.API.Services.Common.User
 {
-    using Entities;
     using Models.User;
 
     public interface IRegisterUser
