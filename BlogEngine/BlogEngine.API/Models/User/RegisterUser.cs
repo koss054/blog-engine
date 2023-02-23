@@ -1,7 +1,7 @@
 namespace BlogEngine.API.Models.User
 {
     using System.ComponentModel.DataAnnotations;
-    public class RegisterUser : IUserDto
+    public class RegisterUser
     {
         [Required]
         [StringLength(32, MinimumLength = 4)]

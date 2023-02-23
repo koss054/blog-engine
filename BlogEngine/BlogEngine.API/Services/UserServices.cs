@@ -1,16 +1,16 @@
 namespace BlogEngine.API.Services
 {
+    using System.Text;
     using System.Threading.Tasks;
+    using System.Security.Cryptography;
 
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    using Common;
+    using Data;
     using Entities;
     using Models.User;
-    using System.Security.Cryptography;
-    using System.Text;
-    using BlogEngine.API.Data;
-    using BlogEngine.API.Services.Common.User;
+    using Services.Common.User;
 
     public class UserServices : IUserService
     {
@@ -21,29 +21,53 @@ namespace BlogEngine.API.Services
             _context = context;
         }
 
-        public async Task<bool> RegisterUser(RegisterUser registerUser)
+        public async Task<User> RegisterUser(RegisterUser registerUser)
         {
-            if (await UserExists(registerUser)) return false;
+            var user = new User();
 
-            using var hmac = new HMACSHA512();
-
-            var user = new User 
+            if (await UserExists(registerUser.UserName, registerUser.Email) == false)
             {
-                UserName = registerUser.UserName,
-                Email = registerUser.Email,
-                Password = registerUser.Password,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerUser.Password)),
-                PasswordSalt = hmac.Key
-            };
+                using var hmac = new HMACSHA512();
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+                user.UserName = registerUser.UserName;
+                user.Email = registerUser.Email;
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerUser.Password));
+                user.PasswordSalt = hmac.Key;
 
-            return true;
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+            }
+
+            return user;
         }
 
-        private async Task<bool> UserExists(IUserDto user) {
-            return await _context.Users.AnyAsync(u => u.UserName == user.UserName);
+        public async Task<User?> LoginUser(LoginUser loginUser)
+        {
+            if (await UserExists(loginUser.UserName) == false) return null;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginUser.UserName);
+
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i]) return null;
+            }
+
+            return user;
+        }
+
+        private async Task<bool> UserExists(string userName)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.UserName == userName);
+        }
+
+        private async Task<bool> UserExists(string userName, string email)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.UserName == userName || u.Email == email);
         }
     }
 }

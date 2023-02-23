@@ -1,6 +1,6 @@
 namespace BlogEngine.API.Services.Common.User
 {
-    public interface IUserService : IRegisterUser
+    public interface IUserService : IRegisterUser, ILoginUser
     {
         
     }

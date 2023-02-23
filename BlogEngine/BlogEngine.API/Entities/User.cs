@@ -26,13 +26,6 @@
         public string Email { get; set; } = null!;
 
         /// <summary>
-        /// Password of user.
-        /// </summary>
-        [Required]
-        [StringLength(32)]
-        public string Password { get; set; } = null!;
-
-        /// <summary>
         /// Pass hash.
         /// </summary>
         public byte[] PasswordHash { get; set; } = null!;
