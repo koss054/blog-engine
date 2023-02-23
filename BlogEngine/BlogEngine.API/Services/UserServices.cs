@@ -42,16 +42,17 @@ namespace BlogEngine.API.Services
 
         public async Task<User?> LoginUser(LoginUser loginUser)
         {
-            if (await UserNameExists(loginUser.UserName) == false) return null;
-
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginUser.UserName);
 
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
-
-            for (int i = 0; i < computedHash.Length; i++)
+            if (user != null)
             {
-                if (computedHash[i] != user.PasswordHash[i]) return null;
+                using var hmac = new HMACSHA512(user.PasswordSalt);
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
+
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != user.PasswordHash[i]) return null;
+                }
             }
 
             return user;

@@ -5,6 +5,6 @@ namespace BlogEngine.API.Services.Common.User
 
     public interface IRegisterUser
     {
-        Task<User?> RegisterUser(RegisterUser registerUser);
+        Task<User> RegisterUser(RegisterUser registerUser);
     }
 }
