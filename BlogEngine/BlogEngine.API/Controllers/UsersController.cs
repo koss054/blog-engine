@@ -1,12 +1,11 @@
 namespace BlogEngine.API.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
 
     using Models.User;
-    using Entities;
-    using BlogEngine.API.Services.Common.User;
-    using BlogEngine.API.Common;
-    using Microsoft.AspNetCore.Authorization;
+    using Services.Common.User;
+    using Common;
 
     public class UsersController : BaseApiController
     {

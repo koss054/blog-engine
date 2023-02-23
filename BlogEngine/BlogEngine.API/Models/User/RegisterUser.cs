@@ -1,6 +1,7 @@
 namespace BlogEngine.API.Models.User
 {
     using System.ComponentModel.DataAnnotations;
+
     public class RegisterUser
     {
         [Required]

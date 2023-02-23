@@ -4,7 +4,6 @@ namespace BlogEngine.API.Services
     using System.Threading.Tasks;
     using System.Security.Cryptography;
 
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     using Data;
@@ -43,7 +42,7 @@ namespace BlogEngine.API.Services
 
         public async Task<User?> LoginUser(LoginUser loginUser)
         {
-            if (await UserExists(loginUser.UserName) == false) return null;
+            if (await UserNameExists(loginUser.UserName) == false) return null;
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == loginUser.UserName);
 
@@ -58,7 +57,7 @@ namespace BlogEngine.API.Services
             return user;
         }
 
-        private async Task<bool> UserExists(string userName)
+        private async Task<bool> UserNameExists(string userName)
         {
             return await _context.Users
                 .AnyAsync(u => u.UserName == userName);
