@@ -1,0 +1,19 @@
+nav {
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    padding: 1rem 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: aqua;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.user-actions a {
+    margin-left: 2rem;
+}

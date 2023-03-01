@@ -1,7 +1,13 @@
-<h1>{{title}}</h1>
+<body>
+  <app-nav></app-nav>
 
-<ul>
-  <li *ngFor="let test of testString">
-    {{test}}
-  </li>
-</ul>
+  <section class="container">
+    <h1>{{title}}</h1>
+
+    <ul>
+      <li *ngFor=" let test of testString">
+        {{test}}
+      </li>
+    </ul>
+  </section>
+</body>
