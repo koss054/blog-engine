@@ -7,12 +7,12 @@ namespace BlogEngine.API.Controllers
     using Services.Common.User;
     using Common;
 
-    public class UsersController : BaseApiController
+    public class AccountsController : BaseApiController
     {
         IUserService _userService;
         ITokenService _tokenService;
 
-        public UsersController(IUserService userService, ITokenService tokenService)
+        public AccountsController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
             _tokenService = tokenService;

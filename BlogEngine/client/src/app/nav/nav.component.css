@@ -18,6 +18,12 @@ a {
     color: black;
 }
 
-.user-actions a {
-    margin-left: 2rem;
+form input {
+    margin-left: 1rem;
+    border-radius: 1rem;
+    padding-left: 1rem;
+}
+
+form input:last-child {
+    padding: 0 10px;
 }
