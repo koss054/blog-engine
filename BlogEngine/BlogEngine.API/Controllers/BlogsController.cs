@@ -1,6 +1,7 @@
 ﻿namespace BlogEngine.API.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
 
     using Data;
 
@@ -14,6 +15,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<string>> Test()
         {
             var list = new List<string>();

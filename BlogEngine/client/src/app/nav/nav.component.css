@@ -6,7 +6,11 @@ nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: aqua;
+    background-color: lightblue;
+}
+
+nav h3 span {
+    color: cornflowerblue;
 }
 
 a {
